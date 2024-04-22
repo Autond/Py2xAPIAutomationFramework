@@ -14,55 +14,45 @@ from src.utils.utils import Util
 import pytest
 import allure
 
-def read_credentials_from_excel(file_path): #it will give data from excel
+
+def read_credentials_from_excel(file_path):  # it will give data from excel
     credentials = []
     workbook = openpyxl.load_workbook(filename=file_path)
     sheet = workbook.active
-    for row in sheet.iter_rows(min_row=2,values_only=True):
-        username,password = row
+    for row in sheet.iter_rows(min_row=2, values_only=True):
+        username, password = row
         credentials.append(({
-            "username":username,
-            "password":password
+            "username": username,
+            "password": password
 
         }))
     return credentials
 
-def create_auth_request(username,password): # this will run the  no of times the rows are there in above function
+
+def create_auth_request(username, password):  # this will run the  no of times the rows are there in above function
     payload = {
-        "username" : username,
-        "password" : password
+        "username": username,
+        "password": password
     }
     response = post_request(url=APIConstants.url_create_token(),
-                                headers=Util.common_headers_json(),
-                                auth = None,
-                                payload=payload,
-                                in_json= False
-                                )
+                            headers=Util.common_headers_json(self=None),
+                            auth=None,
+                            payload=payload,
+                            in_json=False
+                            )
     return response
 
 
-
-
-
-def test_create_auth_with_excel(): # we will write the logic to run above function
+def test_create_auth_with_excel():  # we will write the logic to run above function
     file_path = "C:\\Users\\acera\\PycharmProjects\\Py2xAPIAutomationFramework\\tests\\test\\datadriventesting\\testdata_ddt_123.xlsx"
     credentials = read_credentials_from_excel(file_path=file_path)
     print(credentials)
     for user_cred in credentials:
         username = user_cred["username"]
         password = user_cred["password"]
-        print(username,password)
-        response = create_auth_request(username=username,password=password)
+        print(username, password)
+        response = create_auth_request(username=username, password=password)
         print(response.status_code)
-
-
-
-
-
-
-
-
-
 
     # def create_token(self):
     #     response = post_request(url=APIConstants.url_create_token(),
